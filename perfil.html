@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Perfil - SoporTECS</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" crossorigin="anonymous" />
+</head>
+<body class="body-style">
+  <div id="header"></div>
+  <div id="main"></div>
+  <div id="footer"></div>
+
+  <!-- Agregar una sección de perfil con el desplegable -->
+  <div class="profile-menu">
+    <button id="profile-btn" class="profile-btn">Mi Perfil</button>
+    <div id="profile-dropdown" class="profile-dropdown">
+      <a href="signin.html">Iniciar sesión</a>
+      <a href="register.html">Registrarse</a>
+    </div>
+  </div>
+
+  <!-- Aquí van tus scripts JS -->
+  <script>
+    // Mostrar y ocultar el menú desplegable del perfil
+    document.getElementById("profile-btn").addEventListener("click", function(event) {
+      const dropdown = document.getElementById("profile-dropdown");
+      dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+
+      // Prevenir que el clic en el botón se propague (para evitar que se cierre al hacer clic en el resto de la página)
+      event.stopPropagation();
+    });
+
+    // Cerrar el desplegable si se hace clic fuera de él
+    document.addEventListener("click", function(event) {
+      const dropdown = document.getElementById("profile-dropdown");
+      if (!dropdown.contains(event.target) && !event.target.matches("#profile-btn")) {
+        dropdown.style.display = "none";
+      }
+    });
+  </script>
+</body>
+</html>

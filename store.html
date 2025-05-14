@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tienda - SoporTECS</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" crossorigin="anonymous" />
+</head>
+<body class="body-style">
+  <!-- Header, Main y Footer se cargan dinámicamente -->
+  <div id="header"></div>
+  <div id="main"></div>
+  <div id="footer"></div>
+
+  <script>
+    // Carga un fragmento HTML en un contenedor dado
+    async function loadComponent(id, file) {
+      const res = await fetch(file);
+      const html = await res.text();
+      document.getElementById(id).innerHTML = html;
+    }
+
+    // Función para resaltar el enlace activo según la URL
+    function resaltarEnlaceActivo() {
+      const rutaActual = window.location.pathname.split("/").pop(); // ej: store.html
+      const enlaces = document.querySelectorAll(".nav-link");
+
+      enlaces.forEach(link => {
+        const href = link.getAttribute("href");
+        if (href === rutaActual) {
+          link.classList.add("activo");
+        } else {
+          link.classList.remove("activo");
+        }
+      });
+    }
+
+    // Función para activar el clic en los enlaces del menú
+    function activarClicEnMenu() {
+      const enlaces = document.querySelectorAll(".nav-link");
+
+      enlaces.forEach(link => {
+        link.addEventListener("click", () => {
+          enlaces.forEach(el => el.classList.remove("activo"));
+          link.classList.add("activo");
+        });
+      });
+    }
+
+    // Función para manejar la apertura/cierre del menú hamburguesa
+    function activarMenuHamburguesa() {
+      const btn = document.getElementById("menu-toggle");
+      const menu = document.getElementById("nav-list");
+      if (!btn || !menu) return;
+      btn.addEventListener("click", () => {
+        menu.classList.toggle("show");
+      });
+    }
+
+    // Función para manejar el menú desplegable del perfil
+    function activarMenuPerfil() {
+      const btn = document.getElementById("profile-btn");
+      const dropdown = document.getElementById("profile-dropdown");
+      if (!btn || !dropdown) return;
+
+      btn.addEventListener("click", function(event) {
+        dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+        event.stopPropagation();
+      });
+
+      document.addEventListener("click", function(event) {
+        if (!dropdown.contains(event.target) && !event.target.matches("#profile-btn")) {
+          dropdown.style.display = "none";
+        }
+      });
+    }
+
+    // Función que carga todos los componentes
+    async function initPage() {
+      await loadComponent("header", "header.html");
+
+      // Inicializamos el menú de perfil después de cargar el header
+      activarMenuPerfil();  // Aseguramos que el menú de perfil se active siempre
+      activarMenuHamburguesa();  // Activamos el menú hamburguesa
+      resaltarEnlaceActivo();  // Resaltamos el enlace activo
+      activarClicEnMenu();  // Activamos el clic en los enlaces
+
+      // Cargamos el contenido principal y footer
+      await loadComponent("main", "store-main.html");  // Cargamos el contenido principal de la tienda
+      await loadComponent("footer", "footer.html");    // Cargamos el pie de página
+    }
+
+    // Ejecutamos la función cuando el DOM esté completamente cargado
+    document.addEventListener("DOMContentLoaded", initPage);
+    
+  </script>
+</body>
+</html>
